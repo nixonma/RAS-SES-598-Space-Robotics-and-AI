@@ -36,7 +36,7 @@ While the y position was a little more rough than the initial design, I find tha
 - r = 0.1
 
 ## Baseline Performance
-The base Paramaters do a decent job of keeping the pole balanced, however the amplitude of the cart drift increases until one of the edges of the track is collided with, at which point the pole falls and the state becomes unrecoverable. The limiting factor seems to be that the drift of the cart is not penalized enough for the algorithm to keep the cart centered as it drifts.
+The base Paramaters do a decent job of keeping the pole balanced, however the amplitude of the cart drift increases until one of the edges of the track is collided with, at which point the pole falls and the state becomes unrecoverable. The limiting factor seems to be that the drift of the cart is not penalized enough for the algorithm to keep the cart centered as it drifts. The maximum force I can find applied here before the cart collides with the barrier is -18N of control force, the state is {2.01497708 -0.6654062  -0.12372882 -0.36155834} This makes resonable sense, high theta and theta_dot would require high force to correct.
 
 ## Tuning the Parameters
 I was unable to get rq_plot to display meaningful results for proper analysis here[1], so most of the optimization was repeatedly running the sim and seeing how long the cart could balance the pole.
@@ -57,7 +57,16 @@ The second direction I decided on was to penalize the movement in x until I coul
 - theta = 20.0
 - theta_dot = 10.0
 - r = 0.1
-This was okay for about 2 trials, before I realized that if I also kept the penalty for theta high, I could keep the system balanced. This occured as a rather obvious idea, an I'm not sure how it wasn't intuative from the directions/assignment goal, but if we want to balance the cart in the center, the corresponding penalties for these should be high (duh). Thus I ramped up both the x and theta penalties while keeping the _dot penalites lower, until I arrived at my final parameters.
+This seemed to work well, with the highest force state being {-0.10576102 -0.47256824  0.03001505  0.48308189}, with a Control force: 11.951N. However, the cart still collided with the wall eventually.
+
+### Idea 3
+This was about the point I realized that if I also kept the penalty for theta high, I could keep the system balanced. This occured as a rather obvious idea, an I'm not sure how it wasn't intuative from the directions/assignment goal, but if we want to balance the cart in the center, the corresponding penalties for these should be high (duh). Thus I ramped up both the x and theta penalties while keeping the _dot penalites lower, until I arrived at my third set of parameters:
+- x = 20.0
+- x_dot = 3.0
+- theta = 60.0
+- theta_dot = 5.0
+- r = 0.1
+The highest magnitude of force I could find here was in the state: {0.21163204  0.57414084 -0.01532993 -0.76431061}, with a Control force: -15.819N. While the cart does seem to balance relatively well here, it is a higher maximum force than the second parameter set. Intuitively this would be because the higher penalties cause the system to correct faster than the second set, requiring more force to fix the disturbances faster. However, this set has managed to keep the pole balanced long enough for me to write this report. This makes it the longest lasting control yet, and the best at adhering to the goals of staying within the boundaries and having the pole upright.
 
 [1](I'm not sure what I was doing wrong, but I could not publish statistics or get useful ones in the visualization, if you have/know of a tutorial that would be much appreciated)
 
@@ -71,10 +80,11 @@ This was okay for about 2 trials, before I realized that if I also kept the pena
 - r = 0.1
 
 ## Final Performance
-This set of parameters, while likely the most energy-expensive parameters, has managed to keep the pole balanced long enough for me to write this report. This makes it the longest lasting control yet, and the best at adhering to the goals of staying within the boundaries and having the pole upright, just better hope the physical design of the system can output the kind of energy needed to keep this going.
+With the results demonstrated originally, I decided while the forces required were higher, the third set of parameters was the best at keeping the pole balanced and thus are the parameters I decided to keep for this scenario. While it is possible that the force required would be outside of system capabilities should the system be built physically, I decided for the purpose of the simulation that these were my favorite results.
 
 
 ## Challenges and Solutions  
 - The first challenge here was in setup again, the state of the VM was not correctly saved after the last assignment, resulting in me needing to re-install jazzy and python, and re-clone the repository. None of this was difficult per se but it was about an hour ish of my time. I believe it was because one of the drives from the original VM was not reloaded properly, but I didn't care to figure it out, just wanted to get the assignment running.
 - The next challenge was reading comprehension. As mentioned above, it took me a couple of itterations of trial and error (even when I knew what the paramaters did from the jump) to realize that we should penalize for the factors we care about and are listed as goals in the assignment. Not sure how I didn't think of this sooner, but apparently I'm just editing code with my brain off.
-- The last problem I ran into as I mentioned in [1] was I could not get the statistics I wanted out of the sim in a manner that allowed me to compare nicely.
+- The third problem I ran into as I mentioned in [1] was I could not get the statistics I wanted out of the sim in a manner that allowed me to compare nicely.
+- Finally, when I ran the simulations originally, the above results were noted, but upon returning to the simulations to see if I could fish out any better or more informative stats, the second set of parameters no longer colides with the wall. I am unsure if this is because I incorrectly built the assignment the first or second time, or somehow got really unlucky with the original runs of this parameter set, but I am now uncertain of the results. Should parameter set two not collide with the wall it is the better set. However, assuming I built all of the trials correctly, and I did get unlucky with the original runs of set 2, it did collide, making 3 the better set even if just down to being unlucky.
