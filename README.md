@@ -24,3 +24,51 @@ While the y position was a little more rough than the initial design, I find tha
 - The first challenge here was in setup, I felt as though I installed all of the environment set-up correctly, but much troubleshooting was required to even get the assignment to run properly.  
 - The next challenge was understanding what the difference between what I *thought* the parameters did and what they *actually* did. This just took some alterations of the parameters to figure out, but was nonetheless an issue to begin with.
 - Ideally I'd like to have found a manner to smooth both of the x and y curves out more, but I was unable to find a set of paramaters that generated smooth curves for both values at the same time. Thus this middle ground is what I have landed upon.
+
+
+# Assignment 2
+
+## Baseline Paramaters
+- x = 1.0
+- x_dot = 1.0
+- theta = 10.0
+- theta_dot = 10.0
+- r = 0.1
+
+## Baseline Performance
+The base Paramaters do a decent job of keeping the pole balanced, however the amplitude of the cart drift increases until one of the edges of the track is collided with, at which point the pole falls and the state becomes unrecoverable. The limiting factor seems to be that the drift of the cart is not penalized enough for the algorithm to keep the cart centered as it drifts.
+
+## Tuning the Parameters
+I was unable to get rq_plot to display meaningful results for proper analysis here[1], so most of the optimization was repeatedly running the sim and seeing how long the cart could balance the pole.
+
+### Idea 1
+Initially, My thought was that the penalty should be high for deviations in theta and theta_dot as we want the pole to be upright, and then smaller penaties for x, and a further smaller penalty for x_dot. This followed from my idea that if I was trying to balance this pole, I am okay with moving my arm quickly to correct the movement, but I really want the pole to stay upright so the penalties for this should be higher. Penalies here came out to:
+- x = 1.0
+- x_dot = 0.5
+- theta = 20.0
+- theta_dot = 10.0
+- r = 0.1
+This sort of worked. The pole was balanced for a good bit longer, but the cart started to deviate more and more from the original position until it collided with a barrier. This comes around because the cart was incurring too high a penalty for the change in theta, and to compensate, it was moving more. However, the cart was still doing a good job with keeping the pole balanced at the beginning.
+
+### Idea 2
+The second direction I decided on was to penalize the movement in x until I could get the cart to drop the pole without colliding with a barrier, just to see what the extemes looked like for the parameters, but I wanted to increase incrementally in case I stumbled upon a good solution on the way. I didn't really care about the x_dot or theta_dot, as long as we keep the pole balanced, and mostly centered, the speed isn't super relevant [2]. Thus I kept the penalty for x_dot and theta_dot low-ish, and ramped up the penalty for x. This resulted in the parameters:
+- x = 10.0
+- x_dot = 0.5
+- theta = 20.0
+- theta_dot = 10.0
+- r = 0.1
+This was okay for about 2 trials, before I realized that if I also kept the penalty for theta high, I could keep the system balanced. This occured as a rather obvious idea, an I'm not sure how it wasn't intuative from the directions/assignment goal, but if we want to balance the cart in the center, the corresponding penalties for these should be high (duh). Thus I ramped up both the x and theta penalties while keeping the _dot penalites lower, until I arrived at my final parameters.
+
+[1](I'm not sure what I was doing wrong, but I could not publish statistics or get useful ones in the visualization, if you have/know of a tutorial that would be much appreciated)
+
+[2]: in the case that this were a physical system, these factors would likely be the limiting ones, as you can only get the cart moving at a certain speed, and faster means higher energy consumption
+
+## Final Parameters
+- x = 20.0
+- x_dot = 3.0
+- theta = 60.0
+- theta_dot = 5.0
+- r = 0.1
+
+## Final Performance
+This set of parameters, while likely the most energy-expensive parameters, has managed to keep the pole balanced long enough for me to write this report. This makes it the longest lasting control yet, and the best at adhering to the goals of staying within the boundaries and having the pole upright, just better hope the physical design of the system can output the kind of energy needed to keep this going.
