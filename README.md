@@ -72,3 +72,9 @@ This was okay for about 2 trials, before I realized that if I also kept the pena
 
 ## Final Performance
 This set of parameters, while likely the most energy-expensive parameters, has managed to keep the pole balanced long enough for me to write this report. This makes it the longest lasting control yet, and the best at adhering to the goals of staying within the boundaries and having the pole upright, just better hope the physical design of the system can output the kind of energy needed to keep this going.
+
+
+## Challenges and Solutions  
+- The first challenge here was in setup again, the state of the VM was not correctly saved after the last assignment, resulting in me needing to re-install jazzy and python, and re-clone the repository. None of this was difficult per se but it was about an hour ish of my time. I believe it was because one of the drives from the original VM was not reloaded properly, but I didn't care to figure it out, just wanted to get the assignment running.
+- The next challenge was reading comprehension. As mentioned above, it took me a couple of itterations of trial and error (even when I knew what the paramaters did from the jump) to realize that we should penalize for the factors we care about and are listed as goals in the assignment. Not sure how I didn't think of this sooner, but apparently I'm just editing code with my brain off.
+- The last problem I ran into as I mentioned in [1] was I could not get the statistics I wanted out of the sim in a manner that allowed me to compare nicely.
